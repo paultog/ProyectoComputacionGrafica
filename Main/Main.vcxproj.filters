@@ -46,7 +46,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Carga de Modelos.cpp">
+    <ClCompile Include="Proyecto.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
