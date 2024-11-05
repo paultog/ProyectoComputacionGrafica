@@ -398,4 +398,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Ignorar la carpeta de modelos para este proyecto
-Main\Models
+/Main/Models
