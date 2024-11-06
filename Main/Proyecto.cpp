@@ -42,7 +42,7 @@ void DoMovement();
 void Animation();
 
 // Window dimensions
-const GLuint WIDTH = 800, HEIGHT = 600;
+const GLuint WIDTH = 1700, HEIGHT = 900;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 // Camera
@@ -54,6 +54,8 @@ bool firstMouse = true;
 // Light attributes
 glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 bool active;
+
+
 
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
@@ -121,14 +123,15 @@ float RLegs = 0.0f;
 float RLegsAux = 0.0f;
 float head = 0.0f;
 float tail = 0.0f;
+float circularPathSpeed = 0.001f;
+float circularAngle = 0.0f;
+const float angularSpeed = 0.0009f;
+float valor = 0.5f;  // 'f' indica que es un float, no un double
 
-//								variables de animación
-float circularPathSpeed = 0.001f; // Velocidad de avance
-float circularAngle = 0.0f; // Ángulo de rotación en el círculo
+
 bool moveInCircle = false; // Controla si el perro está en movimiento circular
 
 const float RADIUS = 0.3f;  // Radio del círculo
-const float angularSpeed = 0.0009f; // Velocidad del ángulo
 
 
 
@@ -333,14 +336,17 @@ int main()
 	Shader lampShader("Shader/lamp.vs", "Shader/lamp.frag");
 
 
-	// -------------------------- CARGA DE MODELOS ------------------------------------
+	// --------------------------------------------------------------------------------------------------------
+	// -------------------------- CARGA DE MODELOS -------------------------------------------------------------
 	Model mountain((char*)"Models/mountain/mountain.obj");
-	//Model Esculturas((char*)"Models/stand/stand.obj");
+	Model Tree1((char*)"Models/trees/tree.obj");
+	Model Esculturas((char*)"Models/stand/stand.obj");
 	Model Floor((char*)"Models/house/snowFloor.obj");
 	Model House((char*)"Models/house/house.obj");
 	Model Windows((char*)"Models/house/windows.obj");
+	Model Snowman((char*)"Models/snowman/snowman.obj");
 
-	Model Ball((char*)"Models/ball.obj");
+	//Model Ball((char*)"Models/ball.obj");
 	Model bearBody((char*)"Models/bear/bearBody.obj");
 	Model HeadBear((char*)"Models/bear/HeadBear.obj");
 	Model F_RightLeg((char*)"Models/bear/F_RightLegBear.obj");
@@ -351,10 +357,10 @@ int main()
 	//KeyFrames
 	for (int i = 0; i < MAX_FRAMES; i++)
 	{
-		KeyFrame[i].dogPosX = 0;
-		KeyFrame[i].dogPosY = 0;
-		KeyFrame[i].dogPosZ = 0;
-		KeyFrame[i].incX = 0;
+		KeyFrame[i].dogPosX = 0.0f;
+		KeyFrame[i].dogPosY = 0.0f;
+		KeyFrame[i].dogPosZ = 0.0f;
+		KeyFrame[i].incX = 0.0f;
 		KeyFrame[i].incY = 0;
 		KeyFrame[i].incZ = 0;
 		KeyFrame[i].rotDog = 0;
@@ -497,98 +503,151 @@ int main()
 
 		//Carga de modelo 
 		view = camera.GetViewMatrix();
-		/*=====================================  Para dibujar los modelos ==================================*/
-
-		
-		//		-------------------- mountain ------------------------
 		glm::mat4 model(1);
-		model = glm::translate(model, glm::vec3(0.0f, 1.0f, -2.0f));
-		model = glm::scale(model, glm::vec3(5.5f, 5.5f, 5.5f));
+		glm::mat4 modelWindows;
+		glm::mat4 modelWindows2;
+		/*=====================================  Para dibujar los modelos ==================================*/
+		//				------------------------------ Mountain --------------------------
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(20.0f, -3.5f, -40.0f));  // Reducido para que esté dentro del campo visual
+		model = glm::scale(model, glm::vec3(50.0f, 54.0f, 50.0f));  // Escala reducida
 		model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		mountain.Draw(lightingShader);
 
-		/*model = glm::mat4(1);
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Esculturas.Draw(lightingShader);*/
-		//Body
 
+		//				------------------------------ Esculturas --------------------------
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(0.0f, 3.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(-25.0f, -0.80f, -1.0f));  // Ajuste de posición
+		model = glm::scale(model, glm::vec3(0.65f, 0.65f, 0.65f));  // Escala reducida
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Esculturas.Draw(lightingShader);
+
+		//		--------------------------------------- Snowman ----------------------------
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(0.0f, -0.80f, 0.0f));  // Ajuste de posición
+		model = glm::scale(model, glm::vec3(0.65f, 0.65f, 0.65f));  // Escala reducida
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Snowman.Draw(lightingShader);
+
+		//			 ------------------------------ Casas 1 --------------------------
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-20.0f, -0.5f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f)); 
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		House.Draw(lightingShader);
-
-		glm::mat4 modelWindows(1);
-		modelWindows = glm::translate(modelWindows, glm::vec3(0.0f, 3.0f, 0.0f));
-		glEnable(GL_BLEND); //Activa la funcionalidad para trabajar en el canal alfa
+		modelWindows = glm::mat4(1);
+		modelWindows = glm::translate(modelWindows, glm::vec3(-20.0f, -0.5f, 0.0f));
+		modelWindows = glm::scale(modelWindows, glm::vec3(0.5f, 0.5f, 0.5f));  
+		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1); //Se pone 1 para poder visualizar la transparencia 
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
 		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelWindows));
 		Windows.Draw(lightingShader);
 		glDisable(GL_BLEND);
 
+		//			 ------------------------------ Casas 2 --------------------------
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(0.0f, 3.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(-20.0f, -0.5f, 1.5f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));  
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		House.Draw(lightingShader);
+		modelWindows2 = glm::mat4(1);
+		modelWindows2 = glm::translate(modelWindows2, glm::vec3(-20.0f, -0.5f, 1.5f));
+		modelWindows2 = glm::rotate(modelWindows2, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		modelWindows2 = glm::scale(modelWindows2, glm::vec3(0.5f, 0.5f, 0.5f)); 
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelWindows2));
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
+		Windows.Draw(lightingShader);
+		glDisable(GL_BLEND);
+
+				//			 ------------------------------ Arbol --------------------------
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-48.0f, -1.0f, 20.0f));  // Asegúrate de que esté dentro de la vista de la cámara
+		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		modelWindows2 = glm::rotate(modelWindows2, glm::radians(35.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Tree1.Draw(lightingShader);
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-54.0f, -1.0f, 0.0f));  // Asegúrate de que esté dentro de la vista de la cámara
+		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		modelWindows2 = glm::rotate(modelWindows2, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Tree1.Draw(lightingShader);
+
+		//			 ------------------------------ Piso --------------------------
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 0.3f, 1.0f));  // Escala ajustada
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Floor.Draw(lightingShader);
 
-		model = glm::mat4(1);
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
-		//Body
-		modelTemp = model = glm::translate(model, glm::vec3(dogPosX, dogPosY, dogPosZ));
-		modelTemp = model = glm::rotate(model, glm::radians(-rotDog), glm::vec3(0.0f, 1.0f, 0.0f));
-		modelTemp = model = glm::rotate(model, glm::radians(rotDogX), glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		bearBody.Draw(lightingShader);
-		//Head
-		model = modelTemp;
-		model = glm::translate(model, glm::vec3(0.0f, 0.093f, 0.208f));
-		model = glm::rotate(model, glm::radians(head), glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		HeadBear.Draw(lightingShader);
-		
-		model = modelTemp;
-		model = glm::translate(model, glm::vec3(0.112f, -0.044f, 0.074f));
-		model = glm::rotate(model, glm::radians(FLegsI), glm::vec3(-1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(FLegs), glm::vec3(-1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(FLegsD), glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		F_LeftLeg.Draw(lightingShader);
-		//Front Right Leg
-		model = modelTemp;
-		model = glm::translate(model, glm::vec3(-0.111f, -0.055f, 0.074f));
-		model = glm::rotate(model, glm::radians(FLegs), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(FLegsD), glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		F_RightLeg.Draw(lightingShader);
-		//Back Left Leg
-		model = modelTemp;
-		model = glm::translate(model, glm::vec3(0.082f, -0.046, -0.218));
-		model = glm::rotate(model, glm::radians(RLegs), glm::vec3(-1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(RLegsAux), glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		B_LeftLeg.Draw(lightingShader);
-		//Back Right Leg
-		model = modelTemp;
-		model = glm::translate(model, glm::vec3(-0.083f, -0.057f, -0.231f));
-		model = glm::rotate(model, glm::radians(RLegs), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(RLegsAux), glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		B_RightLeg.Draw(lightingShader);
 
 
-		model = glm::mat4(1);
-		glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
-		model = glm::rotate(model, glm::radians(rotBall), glm::vec3(0.0f, 1.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Ball.Draw(lightingShader);
-		glDisable(GL_BLEND);  //Desactiva el canal alfa 
-		glBindVertexArray(0);
+
+
+
+		//		-------------------- Oso ------------------------
+		//model = glm::mat4(1);
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
+		////Body
+		//modelTemp = model = glm::translate(model, glm::vec3(dogPosX, dogPosY, dogPosZ));
+		//modelTemp = model = glm::rotate(model, glm::radians(-rotDog), glm::vec3(0.0f, 1.0f, 0.0f));
+		//modelTemp = model = glm::rotate(model, glm::radians(rotDogX), glm::vec3(1.0f, 0.0f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//bearBody.Draw(lightingShader);
+		////Head
+		//model = modelTemp;
+		//model = glm::translate(model, glm::vec3(0.0f, 0.093f, 0.208f));
+		//model = glm::rotate(model, glm::radians(head), glm::vec3(1.0f, 0.0f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//HeadBear.Draw(lightingShader);
+		//
+		//model = modelTemp;
+		//model = glm::translate(model, glm::vec3(0.112f, -0.044f, 0.074f));
+		//model = glm::rotate(model, glm::radians(FLegsI), glm::vec3(-1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(FLegs), glm::vec3(-1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(FLegsD), glm::vec3(1.0f, 0.0f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//F_LeftLeg.Draw(lightingShader);
+		////Front Right Leg
+		//model = modelTemp;
+		//model = glm::translate(model, glm::vec3(-0.111f, -0.055f, 0.074f));
+		//model = glm::rotate(model, glm::radians(FLegs), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(FLegsD), glm::vec3(1.0f, 0.0f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//F_RightLeg.Draw(lightingShader);
+		////Back Left Leg
+		//model = modelTemp;
+		//model = glm::translate(model, glm::vec3(0.082f, -0.046, -0.218));
+		//model = glm::rotate(model, glm::radians(RLegs), glm::vec3(-1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(RLegsAux), glm::vec3(1.0f, 0.0f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//B_LeftLeg.Draw(lightingShader);
+		////Back Right Leg
+		//model = modelTemp;
+		//model = glm::translate(model, glm::vec3(-0.083f, -0.057f, -0.231f));
+		//model = glm::rotate(model, glm::radians(RLegs), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(RLegsAux), glm::vec3(1.0f, 0.0f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//B_RightLeg.Draw(lightingShader);
+
+
+		//model = glm::mat4(1);
+		//glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
+		//model = glm::rotate(model, glm::radians(rotBall), glm::vec3(0.0f, 1.0f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//Ball.Draw(lightingShader);
+		//glDisable(GL_BLEND);  //Desactiva el canal alfa 
+		//glBindVertexArray(0);
 
 
 		// Also draw the lamp object, again binding the appropriate shader
@@ -761,32 +820,32 @@ void DoMovement()
 
 	if (keys[GLFW_KEY_H])
 	{
-		dogPosZ += 0.001;
+		dogPosZ += 0.001f;
 	}
 
 	if (keys[GLFW_KEY_Y])
 	{
-		dogPosZ -= 0.001;
+		dogPosZ -= 0.001f;
 	}
 
 	if (keys[GLFW_KEY_G])
 	{
-		dogPosX -= 0.001;
+		dogPosX -= 0.001f;
 	}
 
 	if (keys[GLFW_KEY_J])
 	{
-		dogPosX += 0.001;
+		dogPosX += 0.01f;
 	}
 
 	if (keys[GLFW_KEY_B])
 	{
-		dogPosY -= 0.001;
+		dogPosY -= 0.001f;
 	}
 
 	if (keys[GLFW_KEY_N])
 	{
-		dogPosY += 0.001;
+		dogPosY += 0.001f;
 	}
 
 	// Camera controls
@@ -975,3 +1034,8 @@ void MouseCallback(GLFWwindow* window, double xPos, double yPos)
 
 	camera.ProcessMouseMovement(xOffset, yOffset);
 }
+
+
+
+
+
