@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include <cmath>
 #include <glm/gtc/constants.hpp> 
-#ifndef M_PI			//Definimos una constante para usarla en el recorrido circular del perro.
+#ifndef M_PI			
 #define M_PI 3.14159
 #endif
 
@@ -253,28 +253,7 @@ void resetElements(void)
 	rotDogX = KeyFrame[0].rotDogX;
 
 }
-//void interpolation(void) 
-//{
-//
-//	KeyFrame[playIndex].incX = (KeyFrame[playIndex + 1].dogPosX - KeyFrame[playIndex].dogPosX) / i_max_steps;
-//	KeyFrame[playIndex].incY = (KeyFrame[playIndex + 1].dogPosY - KeyFrame[playIndex].dogPosY) / i_max_steps;
-//	KeyFrame[playIndex].incZ = (KeyFrame[playIndex + 1].dogPosZ - KeyFrame[playIndex].dogPosZ) / i_max_steps;
-//	KeyFrame[playIndex].headInc = (KeyFrame[playIndex + 1].head - KeyFrame[playIndex].head) / i_max_steps;
-//	KeyFrame[playIndex].tailInc = (KeyFrame[playIndex + 1].tail - KeyFrame[playIndex].tail) / i_max_steps;
-//	KeyFrame[playIndex].FLegsInc = (KeyFrame[playIndex + 1].FLegs - KeyFrame[playIndex].FLegs) / i_max_steps;
-//	KeyFrame[playIndex].RLegsInc = (KeyFrame[playIndex + 1].RLegs - KeyFrame[playIndex].RLegs) / i_max_steps;
-//
-//	KeyFrame[playIndex].FLegsIInc = (KeyFrame[playIndex + 1].FLegsI - KeyFrame[playIndex].FLegsI) / i_max_steps;
-//	KeyFrame[playIndex].FLegsDInc = (KeyFrame[playIndex + 1].FLegsD - KeyFrame[playIndex].FLegsD) / i_max_steps;
-//	KeyFrame[playIndex].RLegsAuxInc = (KeyFrame[playIndex + 1].RLegsAux - KeyFrame[playIndex].RLegsAux) / i_max_steps;
-//
-//
-//	KeyFrame[playIndex].rotDogInc = (KeyFrame[playIndex + 1].rotDog - KeyFrame[playIndex].rotDog) / i_max_steps;
-//	KeyFrame[playIndex].rotDogXInc = (KeyFrame[playIndex + 1].rotDogX - KeyFrame[playIndex].rotDogX) / i_max_steps;
-//
-//}
 
-//									Alternariva de interpolación, ambos funcionan correctamente
 void interpolation() {
 	for (int i = 0; i < MAX_FRAMES - 1; ++i) {
 		KeyFrame[i].incX = (KeyFrame[i + 1].dogPosX - KeyFrame[i].dogPosX) / i_max_steps;
@@ -315,7 +294,7 @@ int main()
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);*/
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Animacion por key frames - Paul Vazquez Davila", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Proyecto", nullptr, nullptr);
 
 	if (nullptr == window)
 	{
@@ -354,11 +333,12 @@ int main()
 	Shader lampShader("Shader/lamp.vs", "Shader/lamp.frag");
 
 
-	// -------------------------- CASRGA DE MODELOS ------------------------------------
+	// -------------------------- CARGA DE MODELOS ------------------------------------
 	Model mountain((char*)"Models/mountain/mountain.obj");
-	Model Ball((char*)"Models/ball.obj");
+	//Model Esculturas((char*)"Models/stand/stand.obj");
+	Model Floor((char*)"Models/house/snowFloor.obj");
 
-	Model Esculturas((char*)"Models/stand/stand.obj");
+	Model Ball((char*)"Models/ball.obj");
 	Model bearBody((char*)"Models/bear/bearBody.obj");
 	Model HeadBear((char*)"Models/bear/HeadBear.obj");
 	Model F_RightLeg((char*)"Models/bear/F_RightLegBear.obj");
@@ -520,15 +500,20 @@ int main()
 		
 		//		-------------------- mountain ------------------------
 		glm::mat4 model(1);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 1.0f, -2.0f));
 		model = glm::scale(model, glm::vec3(5.5f, 5.5f, 5.5f));
 		model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		mountain.Draw(lightingShader);
 
-		model = glm::mat4(1);
+		/*model = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Esculturas.Draw(lightingShader);
+		Esculturas.Draw(lightingShader);*/
+		//Body
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(0.0f, 3.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Floor.Draw(lightingShader);
 
 		model = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -650,20 +635,20 @@ void DoMovement()
 
 
 
-	//Dog Controls
-	if (keys[GLFW_KEY_1])
-	{
-		circularAngle += angularSpeed;  // Incrementa el ángulo para el movimiento circular
-		dogPosX = RADIUS * cos(circularAngle); // Posición en X
-		dogPosZ = RADIUS * sin(circularAngle); // Posición en Z
-		rotDog += 0.05f;
-		FLegs = 15.0f * sin(rotDog * 0.05f); // Mueve las patas delanteras
-		RLegs = 15.0f * sin(rotDog * 0.05f);  // Mueve las patas traseras
-		// Mantener circularAngle en el rango [0, 2π]
-		if (circularAngle > 2 * M_PI) {
-			circularAngle -= 2 * M_PI;
-		}
-	}
+	////Dog Controls
+	//if (keys[GLFW_KEY_1])
+	//{
+	//	circularAngle += angularSpeed;  // Incrementa el ángulo para el movimiento circular
+	//	dogPosX = RADIUS * cos(circularAngle); // Posición en X
+	//	dogPosZ = RADIUS * sin(circularAngle); // Posición en Z
+	//	rotDog += 0.05f;
+	//	FLegs = 15.0f * sin(rotDog * 0.05f); // Mueve las patas delanteras
+	//	RLegs = 15.0f * sin(rotDog * 0.05f);  // Mueve las patas traseras
+	//	// Mantener circularAngle en el rango [0, 2π]
+	//	if (circularAngle > 2 * M_PI) {
+	//		circularAngle -= 2 * M_PI;
+	//	}
+	//}
 
 	if (keys[GLFW_KEY_2])
 	{
