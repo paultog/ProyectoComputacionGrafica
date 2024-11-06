@@ -337,6 +337,8 @@ int main()
 	Model mountain((char*)"Models/mountain/mountain.obj");
 	//Model Esculturas((char*)"Models/stand/stand.obj");
 	Model Floor((char*)"Models/house/snowFloor.obj");
+	Model House((char*)"Models/house/house.obj");
+	Model Windows((char*)"Models/house/windows.obj");
 
 	Model Ball((char*)"Models/ball.obj");
 	Model bearBody((char*)"Models/bear/bearBody.obj");
@@ -510,6 +512,22 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Esculturas.Draw(lightingShader);*/
 		//Body
+
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(0.0f, 3.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		House.Draw(lightingShader);
+
+		glm::mat4 modelWindows(1);
+		modelWindows = glm::translate(modelWindows, glm::vec3(0.0f, 3.0f, 0.0f));
+		glEnable(GL_BLEND); //Activa la funcionalidad para trabajar en el canal alfa
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1); //Se pone 1 para poder visualizar la transparencia 
+		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelWindows));
+		Windows.Draw(lightingShader);
+		glDisable(GL_BLEND);
+
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(0.0f, 3.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
