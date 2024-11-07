@@ -340,9 +340,10 @@ int main()
 	// -------------------------- CARGA DE MODELOS -------------------------------------------------------------
 	Model mountain((char*)"Models/mountain/mountain.obj");
 	Model Tree1((char*)"Models/trees/tree.obj");
-	//Model Esculturas((char*)"Models/stand/stand.obj");
+	Model Stand((char*)"Models/stand/stand.obj");
+	Model Sculptures((char*)"Models/sculptures/sculptures.obj");
 	Model Floor((char*)"Models/house/snowFloor.obj");
-	Model House((char*)"Models/house/house.obj");
+	//Model House((char*)"Models/house/house.obj");
 	Model Windows((char*)"Models/house/windows.obj");
 	Model Snowman((char*)"Models/snowman/snowman.obj");
 
@@ -506,6 +507,7 @@ int main()
 		glm::mat4 model(1);
 		glm::mat4 modelWindows;
 		glm::mat4 modelWindows2;
+		glm::mat4 modelSculptures;
 		/*=====================================  Para dibujar los modelos ==================================*/
 		//				------------------------------ Mountain --------------------------
 		model = glm::mat4(1);
@@ -521,7 +523,17 @@ int main()
 		model = glm::translate(model, glm::vec3(-25.0f, -0.80f, -1.0f));  // Ajuste de posición
 		model = glm::scale(model, glm::vec3(0.65f, 0.65f, 0.65f));  // Escala reducida
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//Esculturas.Draw(lightingShader);
+		Stand.Draw(lightingShader);
+
+		modelSculptures = glm::mat4(1);
+		modelSculptures = glm::translate(modelSculptures, glm::vec3(-20.0f, -0.5f, 0.0f));
+		modelSculptures = glm::scale(modelSculptures, glm::vec3(0.5f, 0.5f, 0.5f));
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
+		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelSculptures));
+		Sculptures.Draw(lightingShader);
 
 		//		--------------------------------------- Snowman ----------------------------
 		model = glm::mat4(1);
@@ -535,7 +547,7 @@ int main()
 		model = glm::translate(model, glm::vec3(-20.0f, -0.5f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f)); 
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		House.Draw(lightingShader);
+		//House.Draw(lightingShader);
 		modelWindows = glm::mat4(1);
 		modelWindows = glm::translate(modelWindows, glm::vec3(-20.0f, -0.5f, 0.0f));
 		modelWindows = glm::scale(modelWindows, glm::vec3(0.5f, 0.5f, 0.5f));  
@@ -544,7 +556,7 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
 		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelWindows));
-		Windows.Draw(lightingShader);
+		//Windows.Draw(lightingShader);
 		glDisable(GL_BLEND);
 
 		//			 ------------------------------ Casas 2 --------------------------
@@ -553,7 +565,7 @@ int main()
 		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));  
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		House.Draw(lightingShader);
+		//House.Draw(lightingShader);
 		modelWindows2 = glm::mat4(1);
 		modelWindows2 = glm::translate(modelWindows2, glm::vec3(-20.0f, -0.5f, 1.5f));
 		modelWindows2 = glm::rotate(modelWindows2, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -562,7 +574,7 @@ int main()
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelWindows2));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
-		Windows.Draw(lightingShader);
+		//Windows.Draw(lightingShader);
 		glDisable(GL_BLEND);
 
 				//			 ------------------------------ Arbol --------------------------
