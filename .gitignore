@@ -399,3 +399,5 @@ FodyWeavers.xsd
 
 # Ignorar la carpeta de modelos para este proyecto
 /Main/Models
+# Ignorar la carpeta de imagenes para el skybox
+/Main/SkyBox
