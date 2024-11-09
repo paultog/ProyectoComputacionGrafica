@@ -341,12 +341,12 @@ int main()
 	// -------------------------- CARGA DE MODELOS -------------------------------------------------------------
 	Model mountain((char*)"Models/mountain/mountain.obj");
 	Model Tree1((char*)"Models/trees/tree.obj");
-	Model Stand((char*)"Models/stand/stand.obj");
-	Model Sculptures((char*)"Models/sculptures/sculptures.obj");
-	Model Base((char*)"Models/sculptures/base.obj");
+	//Model Stand((char*)"Models/stand/stand.obj");
+	//Model Sculptures((char*)"Models/sculptures/sculptures.obj");
+	//Model Base((char*)"Models/sculptures/base.obj");
 	Model Floor((char*)"Models/house/snowFloor.obj");
 	//Model House((char*)"Models/house/house.obj");
-	Model Windows((char*)"Models/house/windows.obj");
+	//Model Windows((char*)"Models/house/windows.obj");
 	Model Snowman((char*)"Models/snowman/snowman.obj");
 
 	//Model Ball((char*)"Models/ball.obj");
@@ -610,13 +610,13 @@ int main()
 		//model = glm::translate(model, glm::vec3(-25.0f, -0.80f, -1.0f));  // Ajuste de posición
 		model = glm::scale(model, glm::vec3(0.65f, 0.65f, 0.65f));  // Escala reducida
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Stand.Draw(lightingShader);
+		//Stand.Draw(lightingShader);
 
 		//				------------------------------ Bases --------------------------
 		modelBase = glm::mat4(1);
 		modelBase = glm::translate(modelBase, glm::vec3(14.9f, 0.0f, 20.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelBase));
-		Base.Draw(lightingShader);
+		//Base.Draw(lightingShader);
 
 		//				------------------------------ Esculturas --------------------------
 		modelSculptures = glm::mat4(1);
@@ -627,7 +627,9 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
 		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelSculptures));
-		Sculptures.Draw(lightingShader);
+		glDisable(GL_BLEND);
+		glBindVertexArray(0);
+		//Sculptures.Draw(lightingShader);
 
 		
 
@@ -696,16 +698,13 @@ int main()
 
 
 
-
-
-
 		//		-------------------- Oso ------------------------
 		model = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
 		//Body
 		modelTemp = model = glm::translate(model, glm::vec3(dogPosX, dogPosY, dogPosZ));
-		model = glm::translate(model, glm::vec3(-15.0f, -0.5f, 0.0f));
+		//model = glm::translate(model, glm::vec3(-15.0f, -0.5f, 0.0f));
 		modelTemp = model = glm::rotate(model, glm::radians(-rotDog), glm::vec3(0.0f, 1.0f, 0.0f));
 		modelTemp = model = glm::rotate(model, glm::radians(rotDogX), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
