@@ -1,9 +1,9 @@
 ﻿#include <iostream>
 #include <cmath>
 #include <glm/gtc/constants.hpp> 
-//#ifndef M_PI			
-//#define M_PI 3.14159
-//#endif
+#ifndef M_PI			
+#define M_PI 3.14159
+#endif
 
 
 // GLEW
@@ -113,17 +113,16 @@ float vertices[] = {
 
 glm::vec3 Light1 = glm::vec3(0);
 //Anim
-float rotBall = 0.0f;
-float rotDog = 0.0f;
-float rotDogX = 0.0f;
-int dogAnim = 0;
+//float rotBall = 0.0f;
+float rotBear = 0.0f;
+float rotBearX = 0.0f;
+int BearAnim = 0;
 float FLegs = 0.0f;
 float FLegsI = 0.0f;
 float FLegsD = 0.0f;
 float RLegs = 0.0f;
 float RLegsAux = 0.0f;
 float head = 0.0f;
-float tail = 0.0f;
 float circularPathSpeed = 0.001f;
 float circularAngle = 0.0f;
 const float angularSpeed = 0.0009f;
@@ -137,20 +136,20 @@ const float RADIUS = 0.3f;  // Radio del círculo
 
 
 //KeyFrames
-float dogPosX, dogPosY, dogPosZ;
+float BearPosX, BearPosY, BearPosZ;
 
 #define MAX_FRAMES 20
 int i_max_steps = 600; //190
 int i_curr_steps = 0;
 typedef struct _frame {
 
-	/*float rotDog;
-	float rotDogInc;
-	float rotDogX;
-	float rotDogXInc;
-	float dogPosX;
-	float dogPosY;
-	float dogPosZ;
+	float rotBear;
+	float rotBearInc;
+	float rotBearX;
+	float rotBearXInc;
+	float BearPosX;
+	float BearPosY;
+	float BearPosZ;
 	float incX;
 	float incY;
 	float incZ;
@@ -168,7 +167,7 @@ typedef struct _frame {
 	float FLegsDInc;
 
 	float RLegsAux;
-	float RLegsAuxInc;*/
+	float RLegsAuxInc;
 
 }FRAME;
 
@@ -182,69 +181,67 @@ void saveFrame(void)
 
 	printf("frameindex %d\n", FrameIndex);
 
-	/*KeyFrame[FrameIndex].dogPosX = dogPosX;
-	KeyFrame[FrameIndex].dogPosY = dogPosY;
-	KeyFrame[FrameIndex].dogPosZ = dogPosZ;
+	KeyFrame[FrameIndex].BearPosX = BearPosX;
+	KeyFrame[FrameIndex].BearPosY = BearPosY;
+	KeyFrame[FrameIndex].BearPosZ = BearPosZ;
 
-	KeyFrame[FrameIndex].rotDog = rotDog;
-	KeyFrame[FrameIndex].rotDogX = rotDogX;
+	KeyFrame[FrameIndex].rotBear = rotBear;
+	KeyFrame[FrameIndex].rotBearX = rotBearX;
 	KeyFrame[FrameIndex].head = head;
-	KeyFrame[FrameIndex].tail = tail;
 	KeyFrame[FrameIndex].FLegs = FLegs;
 	KeyFrame[FrameIndex].RLegs = RLegs;
 
 	KeyFrame[FrameIndex].FLegsI = FLegsI;
 	KeyFrame[FrameIndex].FLegsD = FLegsD;
-	KeyFrame[FrameIndex].RLegsAux = RLegsAux;*/
+	KeyFrame[FrameIndex].RLegsAux = RLegsAux;
 
 	FrameIndex++;
 }
 
 //////////////////////////////////////////////////////////////////				guardado y carga de la animación
-//void saveKeyframesToFile(const char* filename) {
-//	std::ofstream file(filename);
-//	if (file.is_open()) {
-//		for (int i = 0; i < FrameIndex; ++i) {
-//			file << KeyFrame[i].dogPosX << " " << KeyFrame[i].dogPosY << " " << KeyFrame[i].dogPosZ << " ";
-//			file << KeyFrame[i].rotDog << " " << KeyFrame[i].head << " " << KeyFrame[i].tail << " ";
-//			file << KeyFrame[i].FLegs << " " << KeyFrame[i].RLegs << " " << KeyFrame[i].FLegsI << " " << KeyFrame[i].FLegsD << " ";
-//			file << KeyFrame[i].RLegsAux << " " << KeyFrame[i].rotDogX << "\n"; // Agregamos rotDogX
-//		}
-//		file.close();
-//	}
-//	else {
-//		std::cout << "Error: Couldn't open file for saving keyframes." << std::endl;
-//	}
-//}
-//
-//void loadKeyframesFromFile(const char* filename) {
-//	std::ifstream file(filename);
-//	if (file.is_open()) {
-//		FrameIndex = 0;
-//		while (!file.eof() && FrameIndex < MAX_FRAMES) {
-//			file >> KeyFrame[FrameIndex].dogPosX >> KeyFrame[FrameIndex].dogPosY >> KeyFrame[FrameIndex].dogPosZ;
-//			file >> KeyFrame[FrameIndex].rotDog >> KeyFrame[FrameIndex].head >> KeyFrame[FrameIndex].tail;
-//			file >> KeyFrame[FrameIndex].FLegs >> KeyFrame[FrameIndex].RLegs >> KeyFrame[FrameIndex].FLegsI >> KeyFrame[FrameIndex].FLegsD;
-//			file >> KeyFrame[FrameIndex].RLegsAux >> KeyFrame[FrameIndex].rotDogX; // Leemos rotDogX
-//			FrameIndex++;
-//		}
-//		file.close();
-//	}
-//	else {
-//		std::cout << "Error: Couldn't open file for loading keyframes." << std::endl;
-//	}
-//}
+void saveKeyframesToFile(const char* filename) {
+	std::ofstream file(filename);
+	if (file.is_open()) {
+		for (int i = 0; i < FrameIndex; ++i) {
+			file << KeyFrame[i].BearPosX << " " << KeyFrame[i].BearPosY << " " << KeyFrame[i].BearPosZ << " ";
+			file << KeyFrame[i].rotBear << " " << KeyFrame[i].head << " " << KeyFrame[i].tail << " ";
+			file << KeyFrame[i].FLegs << " " << KeyFrame[i].RLegs << " " << KeyFrame[i].FLegsI << " " << KeyFrame[i].FLegsD << " ";
+			file << KeyFrame[i].RLegsAux << " " << KeyFrame[i].rotBearX << "\n"; // Agregamos rotDogX
+		}
+		file.close();
+	}
+	else {
+		std::cout << "Error: Couldn't open file for saving keyframes." << std::endl;
+	}
+}
+
+void loadKeyframesFromFile(const char* filename) {
+	std::ifstream file(filename);
+	if (file.is_open()) {
+		FrameIndex = 0;
+		while (!file.eof() && FrameIndex < MAX_FRAMES) {
+			file >> KeyFrame[FrameIndex].BearPosX >> KeyFrame[FrameIndex].BearPosY >> KeyFrame[FrameIndex].BearPosZ;
+			file >> KeyFrame[FrameIndex].rotBear >> KeyFrame[FrameIndex].head >> KeyFrame[FrameIndex].tail;
+			file >> KeyFrame[FrameIndex].FLegs >> KeyFrame[FrameIndex].RLegs >> KeyFrame[FrameIndex].FLegsI >> KeyFrame[FrameIndex].FLegsD;
+			file >> KeyFrame[FrameIndex].RLegsAux >> KeyFrame[FrameIndex].rotBearX; // Leemos rotDogX
+			FrameIndex++;
+		}
+		file.close();
+	}
+	else {
+		std::cout << "Error: Couldn't open file for loading keyframes." << std::endl;
+	}
+}
 
 
 
 
 void resetElements(void)
 {
-	/*dogPosX = KeyFrame[0].dogPosX;
-	dogPosY = KeyFrame[0].dogPosY;
-	dogPosZ = KeyFrame[0].dogPosZ;
+	BearPosX = KeyFrame[0].BearPosX;
+	BearPosY = KeyFrame[0].BearPosY;
+	BearPosZ = KeyFrame[0].BearPosZ;
 	head = KeyFrame[0].head;
-	tail = KeyFrame[0].tail;
 	FLegs = KeyFrame[0].FLegs;
 	RLegs = KeyFrame[0].RLegs;
 
@@ -253,28 +250,27 @@ void resetElements(void)
 	RLegsAux = KeyFrame[0].RLegsAux;
 
 
-	rotDog = KeyFrame[0].rotDog;
-	rotDogX = KeyFrame[0].rotDogX;*/
+	rotBear = KeyFrame[0].rotBear;
+	rotBearX = KeyFrame[0].rotBearX;
 
 }
 
 void interpolation() {
-	//for (int i = 0; i < MAX_FRAMES - 1; ++i) {
-	//	KeyFrame[i].incX = (KeyFrame[i + 1].dogPosX - KeyFrame[i].dogPosX) / i_max_steps;
-	//	KeyFrame[i].incY = (KeyFrame[i + 1].dogPosY - KeyFrame[i].dogPosY) / i_max_steps;
-	//	KeyFrame[i].incZ = (KeyFrame[i + 1].dogPosZ - KeyFrame[i].dogPosZ) / i_max_steps;
-	//	KeyFrame[i].rotDogInc = (KeyFrame[i + 1].rotDog - KeyFrame[i].rotDog) / i_max_steps;
-	//	KeyFrame[i].headInc = (KeyFrame[i + 1].head - KeyFrame[i].head) / i_max_steps;
-	//	KeyFrame[i].tailInc = (KeyFrame[i + 1].tail - KeyFrame[i].tail) / i_max_steps;
-	//	KeyFrame[i].FLegsIInc = (KeyFrame[i + 1].FLegsI - KeyFrame[i].FLegsI) / i_max_steps;
-	//	KeyFrame[i].FLegsDInc = (KeyFrame[i + 1].FLegsD - KeyFrame[i].FLegsD) / i_max_steps;
-	//	KeyFrame[i].RLegsInc = (KeyFrame[i + 1].RLegs - KeyFrame[i].RLegs) / i_max_steps;
-	//	KeyFrame[i].FLegsInc = (KeyFrame[i + 1].FLegs - KeyFrame[i].FLegs) / i_max_steps;
+	for (int i = 0; i < MAX_FRAMES - 1; ++i) {
+		KeyFrame[i].incX = (KeyFrame[i + 1].BearPosX - KeyFrame[i].BearPosX) / i_max_steps;
+		KeyFrame[i].incY = (KeyFrame[i + 1].BearPosY - KeyFrame[i].BearPosY) / i_max_steps;
+		KeyFrame[i].incZ = (KeyFrame[i + 1].BearPosZ - KeyFrame[i].BearPosZ) / i_max_steps;
+		KeyFrame[i].rotBearInc = (KeyFrame[i + 1].rotBear - KeyFrame[i].rotBear) / i_max_steps;
+		KeyFrame[i].headInc = (KeyFrame[i + 1].head - KeyFrame[i].head) / i_max_steps;
+		KeyFrame[i].FLegsIInc = (KeyFrame[i + 1].FLegsI - KeyFrame[i].FLegsI) / i_max_steps;
+		KeyFrame[i].FLegsDInc = (KeyFrame[i + 1].FLegsD - KeyFrame[i].FLegsD) / i_max_steps;
+		KeyFrame[i].RLegsInc = (KeyFrame[i + 1].RLegs - KeyFrame[i].RLegs) / i_max_steps;
+		KeyFrame[i].FLegsInc = (KeyFrame[i + 1].FLegs - KeyFrame[i].FLegs) / i_max_steps;
 
-	//	// Interpolación para RLegsAux y rotDogX
-	//	KeyFrame[i].RLegsAuxInc = (KeyFrame[i + 1].RLegsAux - KeyFrame[i].RLegsAux) / i_max_steps;
-	//	KeyFrame[i].rotDogXInc = (KeyFrame[i + 1].rotDogX - KeyFrame[i].rotDogX) / i_max_steps;
-	//}
+		// Interpolación para RLegsAux y rotDogX
+		KeyFrame[i].RLegsAuxInc = (KeyFrame[i + 1].RLegsAux - KeyFrame[i].RLegsAux) / i_max_steps;
+		KeyFrame[i].rotBearXInc = (KeyFrame[i + 1].rotBearX - KeyFrame[i].rotBearX) / i_max_steps;
+	}
 }
 
 
@@ -360,16 +356,16 @@ int main()
 	//KeyFrames
 	for (int i = 0; i < MAX_FRAMES; i++)
 	{
-		/*KeyFrame[i].dogPosX = 0.0f;
-		KeyFrame[i].dogPosY = 0.0f;
-		KeyFrame[i].dogPosZ = 0.0f;
+		KeyFrame[i].BearPosX = 0.0f;
+		KeyFrame[i].BearPosY = 0.0f;
+		KeyFrame[i].BearPosZ = 0.0f;
 		KeyFrame[i].incX = 0.0f;
 		KeyFrame[i].incY = 0;
 		KeyFrame[i].incZ = 0;
-		KeyFrame[i].rotDog = 0;
-		KeyFrame[i].rotDogInc = 0;
-		KeyFrame[i].rotDogX = 0;
-		KeyFrame[i].rotDogXInc = 0;
+		KeyFrame[i].rotBear = 0;
+		KeyFrame[i].rotBearInc = 0;
+		KeyFrame[i].rotBearX = 0;
+		KeyFrame[i].rotBearXInc = 0;
 		KeyFrame[i].head = 0;
 		KeyFrame[i].headInc = 0;
 		KeyFrame[i].tail = 0;
@@ -383,7 +379,7 @@ int main()
 		KeyFrame[i].FLegsD = 0;
 		KeyFrame[i].FLegsDInc = 0;
 		KeyFrame[i].RLegsAux = 0;
-		KeyFrame[i].RLegsAuxInc = 0;*/
+		KeyFrame[i].RLegsAuxInc = 0;
 	}
 
 	GLfloat skyboxVertices[] = {
@@ -703,10 +699,11 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
 		//Body
-		modelTemp = model = glm::translate(model, glm::vec3(dogPosX, dogPosY, dogPosZ));
-		//model = glm::translate(model, glm::vec3(-15.0f, -0.5f, 0.0f));
-		modelTemp = model = glm::rotate(model, glm::radians(-rotDog), glm::vec3(0.0f, 1.0f, 0.0f));
-		modelTemp = model = glm::rotate(model, glm::radians(rotDogX), glm::vec3(1.0f, 0.0f, 0.0f));
+		modelTemp = model = glm::translate(model, glm::vec3(BearPosX, BearPosY, BearPosZ));
+		model = glm::translate(model, glm::vec3(-15.0f, -0.5f, 0.0f));
+		modelTemp = model = glm::rotate(model, glm::radians(150.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		modelTemp = model = glm::rotate(model, glm::radians(rotBearX), glm::vec3(1.0f, 0.0f, 0.0f));
+		modelTemp = model = glm::rotate(model, glm::radians(rotBearX), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		bearBody.Draw(lightingShader);
 		//Head
@@ -820,7 +817,7 @@ int main()
 void DoMovement()
 {
 	//Save
-	/*if (keys[GLFW_KEY_C]) {
+	if (keys[GLFW_KEY_C]) {
 		saveKeyframesToFile("animacion_guardada.txt");
 	}
 
@@ -828,7 +825,7 @@ void DoMovement()
 		loadKeyframesFromFile("animacion_guardada.txt");
 		resetElements();
 		interpolation();
-	}*/
+	}
 
 	// Activa o desactiva el avance circular
 	if (keys[GLFW_KEY_M]) {
@@ -838,64 +835,75 @@ void DoMovement()
 
 
 	////Dog Controls
-	//if (keys[GLFW_KEY_1])
-	//{
-	//	circularAngle += angularSpeed;  // Incrementa el ángulo para el movimiento circular
-	//	dogPosX = RADIUS * cos(circularAngle); // Posición en X
-	//	dogPosZ = RADIUS * sin(circularAngle); // Posición en Z
-	//	rotDog += 0.05f;
-	//	FLegs = 15.0f * sin(rotDog * 0.05f); // Mueve las patas delanteras
-	//	RLegs = 15.0f * sin(rotDog * 0.05f);  // Mueve las patas traseras
-	//	// Mantener circularAngle en el rango [0, 2π]
-	//	if (circularAngle > 2 * M_PI) {
-	//		circularAngle -= 2 * M_PI;
-	//	}
-	//}
+	if (keys[GLFW_KEY_1])
+	{
+		circularAngle += angularSpeed;  
+
+		BearPosX -= 0.001f; // Posición en X
+		BearPosZ -= 0.001f; // Posición en Z
+
+		rotBear += 0.09f;
+		FLegs = 15.0f * sin(rotBear * 0.05f); // Mueve las patas delanteras
+		RLegs = 15.0f * sin(rotBear * 0.05f);  // Mueve las patas traseras
+		// Mantener circularAngle en el rango [0, 2π]
+		if (circularAngle > 0.5f * 3.0f) {
+			circularAngle -= 0.5f * 3.0f;
+		}
+	}
+
+	if (keys[GLFW_KEY_Q])
+	{
+		circularAngle += angularSpeed;  // Incrementa el ángulo para el movimiento circular
+		//dogPosX = RADIUS * cos(circularAngle); // Posición en X
+		//dogPosZ = RADIUS * sin(circularAngle); // Posición en Z
+
+		BearPosX += 0.001f; // Posición en X
+		BearPosZ += 0.001f; // Posición en Z
+
+		rotBear += 0.09f;
+		FLegs = 15.0f * sin(rotBear * 0.05f); // Mueve las patas delanteras
+		RLegs = 15.0f * sin(rotBear * 0.05f);  // Mueve las patas traseras
+		// Mantener circularAngle en el rango [0, 2π]
+		if (circularAngle > 0.5f * 3.0f) {
+			circularAngle -= 0.5f * 3.0f;
+		}
+	}
+
+
 
 	if (keys[GLFW_KEY_2])
 	{
 
-		rotDogX += 0.1f;
+		rotBearX += 0.01f;
 	}
 
 	if (keys[GLFW_KEY_3])
 	{
 
-		rotDogX -= 0.1f;
+		rotBearX -= 0.01f;
 	}
 
 	if (keys[GLFW_KEY_4])
 	{
 
-		head += 0.1f;
+		head += 0.01f;
 
 	}
 
 	if (keys[GLFW_KEY_5])
 	{
 
-		head -= 0.1f;
+		head -= 0.01f;
 
 	}
 
-	if (keys[GLFW_KEY_6])
-	{
-
-		tail += 0.1f;
-
-	}
-
-	if (keys[GLFW_KEY_7])
-	{
-
-		tail -= 0.1f;
-
-	}
+	
+	
 
 	if (keys[GLFW_KEY_9])
 	{
 
-		FLegsD += 0.1f;
+		FLegsD += 0.01f;
 		//FLegs += 0.1f;
 
 	}
@@ -904,7 +912,7 @@ void DoMovement()
 	{
 
 		//FLegs -= 0.1f;
-		FLegsD -= 0.1f;
+		FLegsD -= 0.01f;
 
 
 	}
@@ -912,8 +920,8 @@ void DoMovement()
 	if (keys[GLFW_KEY_U])
 	{
 
-		FLegsI += 0.1f;
-		//FLegs += 0.1f;
+		FLegsI += 0.01f;
+		//FLegs += 0.01f;
 
 	}
 
@@ -921,7 +929,7 @@ void DoMovement()
 	{
 
 		//FLegs -= 0.1f;
-		FLegsI -= 0.1f;
+		FLegsI -= 0.01f;
 
 
 	}
@@ -929,14 +937,14 @@ void DoMovement()
 	if (keys[GLFW_KEY_O])
 	{
 
-		RLegs += 0.1f;
+		RLegs += 0.01f;
 
 	}
 
 	if (keys[GLFW_KEY_P])
 	{
 
-		RLegs -= 0.1f;
+		RLegs -= 0.01f;
 
 	}
 
@@ -945,32 +953,32 @@ void DoMovement()
 
 	if (keys[GLFW_KEY_H])
 	{
-		dogPosZ += 0.001f;
+		BearPosZ += 0.01f;
 	}
 
 	if (keys[GLFW_KEY_Y])
 	{
-		dogPosZ -= 0.001f;
+		BearPosZ -= 0.01f;
 	}
 
 	if (keys[GLFW_KEY_G])
 	{
-		dogPosX -= 0.001f;
+		BearPosX -= 0.01f;
 	}
 
 	if (keys[GLFW_KEY_J])
 	{
-		dogPosX += 0.01f;
+		BearPosX += 0.01f;
 	}
 
 	if (keys[GLFW_KEY_B])
 	{
-		dogPosY -= 0.001f;
+		BearPosY -= 0.01f;
 	}
 
 	if (keys[GLFW_KEY_N])
 	{
-		dogPosY += 0.001f;
+		BearPosY += 0.01f;
 	}
 
 	// Camera controls
@@ -1123,20 +1131,19 @@ void Animation() {
 		else
 		{
 			//Draw animation
-			/*dogPosX += KeyFrame[playIndex].incX;
-			dogPosY += KeyFrame[playIndex].incY;
-			dogPosZ += KeyFrame[playIndex].incZ;
+			BearPosX += KeyFrame[playIndex].incX;
+			BearPosY += KeyFrame[playIndex].incY;
+			BearPosZ += KeyFrame[playIndex].incZ;
 			head += KeyFrame[playIndex].headInc;
-			tail += KeyFrame[playIndex].tailInc;
 			FLegs += KeyFrame[playIndex].FLegsInc;
 			RLegs += KeyFrame[playIndex].RLegsInc;
 
 			FLegsI += KeyFrame[playIndex].FLegsIInc;
 			FLegsD += KeyFrame[playIndex].FLegsDInc;
 			RLegsAux += KeyFrame[playIndex].RLegsAuxInc;
-			rotDog += KeyFrame[playIndex].rotDogInc;
-			rotDogX += KeyFrame[playIndex].rotDogXInc;
-			i_curr_steps++;*/
+			rotBear += KeyFrame[playIndex].rotBearInc;
+			rotBearX += KeyFrame[playIndex].rotBearXInc;
+			i_curr_steps++;
 		}
 	}
 
