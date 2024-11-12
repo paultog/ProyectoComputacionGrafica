@@ -337,11 +337,11 @@ int main()
 	// -------------------------- CARGA DE MODELOS -------------------------------------------------------------
 	Model mountain((char*)"Models/mountain/mountain.obj");
 	Model Tree1((char*)"Models/trees/tree.obj");
-	Model Stand((char*)"Models/stand/stand.obj");
+	//Model Stand((char*)"Models/stand/stand.obj");
 	Model Sculptures((char*)"Models/sculptures/sculptures.obj");
 	Model Base((char*)"Models/sculptures/base.obj");
 	Model Floor((char*)"Models/house/snowFloor.obj");
-	Model House((char*)"Models/house/house.obj");
+	//Model House((char*)"Models/house/house.obj");
 	Model Windows((char*)"Models/house/windows.obj");
 	Model Snowman((char*)"Models/snowman/snowman.obj");
 
@@ -606,7 +606,7 @@ int main()
 		model = glm::translate(model, glm::vec3(-25.0f, -0.80f, -1.0f));  // Ajuste de posición
 		model = glm::scale(model, glm::vec3(0.65f, 0.65f, 0.65f));  // Escala reducida
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Stand.Draw(lightingShader);
+		//Stand.Draw(lightingShader);
 
 		//				------------------------------ Bases --------------------------
 		modelBase = glm::mat4(1);
@@ -641,7 +641,7 @@ int main()
 		model = glm::translate(model, glm::vec3(-20.0f, -0.5f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f)); 
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		House.Draw(lightingShader);
+		//House.Draw(lightingShader);
 		modelWindows = glm::mat4(1);
 		modelWindows = glm::translate(modelWindows, glm::vec3(-20.0f, -0.5f, 0.0f));
 		modelWindows = glm::scale(modelWindows, glm::vec3(0.5f, 0.5f, 0.5f));  
@@ -659,7 +659,7 @@ int main()
 		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));  
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		House.Draw(lightingShader);
+		//House.Draw(lightingShader);
 
 		modelWindows2 = glm::mat4(1);
 		modelWindows2 = glm::translate(modelWindows2, glm::vec3(-20.0f, -0.5f, 1.5f));
