@@ -335,18 +335,21 @@ int main()
 	Shader lampShader("Shader/lamp.vs", "Shader/lamp.frag");
 	Shader skyboxShader("Shader/SkyBox.vs", "Shader/SkyBox.frag");
 
+
 	// --------------------------------------------------------------------------------------------------------
 	// -------------------------- CARGA DE MODELOS -------------------------------------------------------------
 	Model mountain((char*)"Models/mountain/mountain.obj");
 	Model Tree1((char*)"Models/trees/tree.obj");
-	Model Stand((char*)"Models/stand/stand.obj");
-	Model Sculptures((char*)"Models/sculptures/sculptures.obj");
+	//Model Stand((char*)"Models/stand/stand.obj");
+	//Model Sculptures((char*)"Models/sculptures/sculptures.obj");
 	Model Base((char*)"Models/sculptures/base.obj");
 	Model Floor((char*)"Models/house/snowFloor.obj");
-	Model House((char*)"Models/house/house.obj");
-	Model Windows((char*)"Models/house/windows.obj");
+	//Model House((char*)"Models/house/house.obj");
+	//Model Windows((char*)"Models/house/windows.obj");
 	Model Snowman((char*)"Models/snowman/snowman.obj");
-	Model Doors((char*)"Models/house/doors.obj");
+	//Model Doors((char*)"Models/house/doors.obj");
+	Model fishTank((char*)"Models/house/fishTank.obj");
+	Model ski((char*)"Models/ski/ski.obj");
 
 	//Model Ball((char*)"Models/ball.obj");
 	Model bearBody((char*)"Models/bear/bearBody.obj");
@@ -593,13 +596,19 @@ int main()
 		glm::mat4 modelWindows2;
 		glm::mat4 modelSculptures;
 		glm::mat4 modelBase;
+		glm::mat4 modelSki;
+		glm::mat4 modelBody;
+		/*
+		glm::mat4 modelHead;
+		glm::mat4 modelFR;
+		glm::mat4 modelFL;
+		glm::mat4 modelBR;
+		glm::mat4 modelBL;*/
 
 		/*=====================================  Para dibujar los modelos ==================================*/
 		//				------------------------------ Mountain --------------------------
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(20.0f, -3.5f, -40.0f));  // Reducido para que esté dentro del campo visual
-		model = glm::scale(model, glm::vec3(65.0f, 75.0f, 65.0f));  // Escala reducida
-		model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		mountain.Draw(lightingShader);
 
@@ -609,7 +618,7 @@ int main()
 		//model = glm::translate(model, glm::vec3(-25.0f, -0.80f, -1.0f));  // Ajuste de posición
 		//model = glm::scale(model, glm::vec3(0.65f, 0.65f, 0.65f));  // Escala reducida
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Stand.Draw(lightingShader);
+		//Stand.Draw(lightingShader);
 
 		//				------------------------------ Bases --------------------------
 		modelBase = glm::mat4(1);
@@ -621,24 +630,26 @@ int main()
 		modelSculptures = glm::mat4(1);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelSculptures));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
 		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelSculptures));
-		//glBindVertexArray(0);
-		Sculptures.Draw(lightingShader);
+		//Sculptures.Draw(lightingShader);
 		glDisable(GL_BLEND);
+
+		//				------------------------------ Ski --------------------------
+		modelSki = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelSki));
+		ski.Draw(lightingShader);
 
 		//		--------------------------------------- Snowman ----------------------------
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(0.0f, -0.80f, 0.0f));  // Ajuste de posición
-		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));  // Escala reducida
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Snowman.Draw(lightingShader);
 
 		//			 ------------------------------ Casas 1 --------------------------
 		model = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		House.Draw(lightingShader);
+		//House.Draw(lightingShader);
 
 		//			 ------------------------------ Windows --------------------------
 		modelWindows = glm::mat4(1);
@@ -647,13 +658,13 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
 		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelWindows));
-		Windows.Draw(lightingShader);
+		//Windows.Draw(lightingShader);
 		glDisable(GL_BLEND);
 
 		//			 ------------------------------ Doors --------------------------
 		model = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Doors.Draw(lightingShader);
+		//Doors.Draw(lightingShader);
 
 				//			 ------------------------------ Arbol --------------------------
 		model = glm::mat4(1);
@@ -667,58 +678,56 @@ int main()
 		//			 ------------------------------ Piso --------------------------
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(1.0f, 0.3f, 1.0f));  // Escala ajustada
+		//model = glm::scale(model, glm::vec3(1.0f, 0.3f, 1.0f));  // Escala ajustada
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Floor.Draw(lightingShader);
 
 
 
 		//		-------------------- Oso ------------------------
-		model = glm::mat4(1);
+		modelBody = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
 		//Body
-		modelTemp = model = glm::translate(model, glm::vec3(BearPosX, BearPosY, BearPosZ));
-		model = glm::translate(model, glm::vec3(-15.0f, -0.5f, 0.0f));
-		modelTemp = model = glm::rotate(model, glm::radians(150.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		modelTemp = model = glm::rotate(model, glm::radians(rotBearX), glm::vec3(1.0f, 0.0f, 0.0f));
-		modelTemp = model = glm::rotate(model, glm::radians(rotBearX), glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		modelTemp = modelBody = glm::translate(modelBody, glm::vec3(BearPosX, BearPosY, BearPosZ));
+		//model = glm::translate(model, glm::vec3(-8.302f, 0.193f, -1.388f));
+		modelTemp = modelBody = glm::rotate(modelBody, glm::radians(rotBearX), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelBody));
 		bearBody.Draw(lightingShader);
 		//Head
-		model = modelTemp;
-		model = glm::translate(model, glm::vec3(0.0f, 0.093f, 0.208f));
-		model = glm::rotate(model, glm::radians(head), glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glm::mat4 modelHead = modelTemp;
+		//model = glm::translate(model, glm::vec3(-9.286f, 0.247f, -1.308f));
+		modelHead = glm::rotate(modelHead, glm::radians(head), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelHead));
 		HeadBear.Draw(lightingShader);
-		
-		model = modelTemp;
-		model = glm::translate(model, glm::vec3(0.112f, -0.044f, 0.074f));
-		model = glm::rotate(model, glm::radians(FLegsI), glm::vec3(-1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(FLegs), glm::vec3(-1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(FLegsD), glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//Front left Leg
+		glm::mat4 modelFL = modelTemp;
+		//model = glm::translate(model, glm::vec3(-8.666f, 0.022f, -1.75f));
+		modelFL = glm::rotate(modelFL, glm::radians(FLegsI), glm::vec3(-1.0f, 0.0f, 0.0f));
+		modelFL = glm::rotate(modelFL, glm::radians(FLegs), glm::vec3(-1.0f, 0.0f, 0.0f));
+		modelFL = glm::rotate(modelFL, glm::radians(FLegsD), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelFL));
 		F_LeftLeg.Draw(lightingShader);
 		//Front Right Leg
-		model = modelTemp;
-		model = glm::translate(model, glm::vec3(-0.111f, -0.055f, 0.074f));
-		model = glm::rotate(model, glm::radians(FLegs), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(FLegsD), glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glm::mat4 modelFR = modelTemp;
+		//model = glm::translate(model, glm::vec3(-8.681f, -0.051f, -1.053f));
+		modelTemp = glm::rotate(modelTemp, glm::radians(FLegs), glm::vec3(1.0f, 0.0f, 0.0f));
+		modelTemp = glm::rotate(modelTemp, glm::radians(FLegsD), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelTemp));
 		F_RightLeg.Draw(lightingShader);
 		//Back Left Leg
-		model = modelTemp;
-		model = glm::translate(model, glm::vec3(0.082f, -0.046, -0.218));
-		model = glm::rotate(model, glm::radians(RLegs), glm::vec3(-1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(RLegsAux), glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glm::mat4 modelBL = modelTemp;
+		//model = glm::translate(model, glm::vec3(-7.83f, -0.034, -1.739));
+		modelBL = glm::rotate(modelBL, glm::radians(RLegs), glm::vec3(1.0f, 0.0f, 0.0f));
+		modelBL = glm::rotate(modelBL, glm::radians(RLegsAux), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelBL));
 		B_LeftLeg.Draw(lightingShader);
 		//Back Right Leg
-		model = modelTemp;
-		model = glm::translate(model, glm::vec3(-0.083f, -0.057f, -0.231f));
-		model = glm::rotate(model, glm::radians(RLegs), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(RLegsAux), glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glm::mat4 modelBR = modelTemp;
+		//model = glm::translate(model, glm::vec3(-7.58f, 0.138f, -1.035f));
+		modelBR = glm::rotate(modelBR, glm::radians(RLegs), glm::vec3(1.0f, 0.0f, 0.0f));
+		modelBR = glm::rotate(modelBR, glm::radians(RLegsAux), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelBR));
 		B_RightLeg.Draw(lightingShader);
 
 
@@ -853,26 +862,26 @@ void DoMovement()
 	if (keys[GLFW_KEY_2])
 	{
 
-		rotBearX += 0.01f;
+		rotBearX += 0.1f;
 	}
 
 	if (keys[GLFW_KEY_3])
 	{
 
-		rotBearX -= 0.01f;
+		rotBearX -= 0.1f;
 	}
 
 	if (keys[GLFW_KEY_4])
 	{
 
-		head += 0.01f;
+		head += 0.1f;
 
 	}
 
 	if (keys[GLFW_KEY_5])
 	{
 
-		head -= 0.01f;
+		head -= 0.1f;
 
 	}
 
@@ -882,7 +891,7 @@ void DoMovement()
 	if (keys[GLFW_KEY_9])
 	{
 
-		FLegsD += 0.01f;
+		FLegsD += 0.1f;
 		//FLegs += 0.1f;
 
 	}
@@ -891,7 +900,7 @@ void DoMovement()
 	{
 
 		//FLegs -= 0.1f;
-		FLegsD -= 0.01f;
+		FLegsD -= 0.1f;
 
 
 	}
@@ -899,7 +908,7 @@ void DoMovement()
 	if (keys[GLFW_KEY_U])
 	{
 
-		FLegsI += 0.01f;
+		FLegsI += 0.1f;
 		//FLegs += 0.01f;
 
 	}
@@ -908,7 +917,7 @@ void DoMovement()
 	{
 
 		//FLegs -= 0.1f;
-		FLegsI -= 0.01f;
+		FLegsI -= 0.1f;
 
 
 	}
@@ -916,14 +925,14 @@ void DoMovement()
 	if (keys[GLFW_KEY_O])
 	{
 
-		RLegs += 0.01f;
+		RLegs += 0.1f;
 
 	}
 
 	if (keys[GLFW_KEY_P])
 	{
 
-		RLegs -= 0.01f;
+		RLegs -= 0.1f;
 
 	}
 
@@ -932,32 +941,32 @@ void DoMovement()
 
 	if (keys[GLFW_KEY_H])
 	{
-		BearPosZ += 0.01f;
+		BearPosZ += 0.1f;
 	}
 
 	if (keys[GLFW_KEY_Y])
 	{
-		BearPosZ -= 0.01f;
+		BearPosZ -= 0.1f;
 	}
 
 	if (keys[GLFW_KEY_G])
 	{
-		BearPosX -= 0.01f;
+		BearPosX -= 0.1f;
 	}
 
 	if (keys[GLFW_KEY_J])
 	{
-		BearPosX += 0.01f;
+		BearPosX += 0.1f;
 	}
 
 	if (keys[GLFW_KEY_B])
 	{
-		BearPosY -= 0.01f;
+		BearPosY -= 0.1f;
 	}
 
 	if (keys[GLFW_KEY_N])
 	{
-		BearPosY += 0.01f;
+		BearPosY += 0.1f;
 	}
 
 	// Camera controls
