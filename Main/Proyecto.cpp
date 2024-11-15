@@ -348,10 +348,12 @@ int main()
 	//Model Windows((char*)"Models/house/windows.obj");
 	Model Snowman((char*)"Models/snowman/snowman.obj");
 	//Model Doors((char*)"Models/house/doors.obj"); 
-	Model fishTank((char*)"Models/house/fishTank.obj");
+	//Model fishTank((char*)"Models/house/fishTank.obj"); 
 	Model ski((char*)"Models/ski/ski.obj");
-	Model Donovan((char*)"Models/restaurant/restaurant.obj");
-	Model DonovanWindows((char*)"Models/restaurant/windowsRes.obj");
+	//Model SkiLift((char*)"Models/skiLift/skiLift.obj");
+	Model MotoSki((char*)"Models/motoski/motoski.obj");
+		//Model Donovan((char*)"Models/restaurant/restaurant.obj");
+	//Model DonovanWindows((char*)"Models/restaurant/windowsRes.obj");
 	//Model Ball((char*)"Models/ball.obj");
 	Model bearBody((char*)"Models/bear/bearBody.obj");
 	Model HeadBear((char*)"Models/bear/HeadBear.obj");
@@ -598,7 +600,10 @@ int main()
 		glm::mat4 modelSculptures;
 		glm::mat4 modelBase;
 		glm::mat4 modelSki;
+		glm::mat4 modelSkiLift;
 		glm::mat4 modelBody;
+		glm::mat4 modelMoto;
+
 		/*
 		glm::mat4 modelHead;
 		glm::mat4 modelFR;
@@ -612,7 +617,6 @@ int main()
 		
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		mountain.Draw(lightingShader);
-
 
 		//				------------------------------ Stand --------------------------
 		model = glm::mat4(1);
@@ -637,10 +641,20 @@ int main()
 		//Sculptures.Draw(lightingShader);
 		glDisable(GL_BLEND);
 
-		//				------------------------------ Ski --------------------------
+		//				------------------------------ Ski --------------------------  
 		modelSki = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelSki));
 		ski.Draw(lightingShader);
+
+		//				------------------------------ Ski Telesilla --------------------------
+		modelSkiLift = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelSkiLift));
+		//SkiLift.Draw(lightingShader);
+
+		//				------------------------------ MotoSki --------------------------
+		modelSkiLift = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelSkiLift));
+		MotoSki.Draw(lightingShader);
 
 		//		--------------------------------------- Snowman ----------------------------
 		model = glm::mat4(1);
@@ -650,7 +664,7 @@ int main()
 		//			 ------------------------------ Restaurant --------------------------
 		model = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Donovan.Draw(lightingShader);
+		//Donovan.Draw(lightingShader);
 
 		//			 ------------------------------ Windows Restaurant --------------------------
 		modelWindows = glm::mat4(1);
@@ -659,7 +673,7 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
 		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelWindows));
-		DonovanWindows.Draw(lightingShader);
+		//DonovanWindows.Draw(lightingShader);
 		glDisable(GL_BLEND);
 
 		//			 ------------------------------ Casas 1 --------------------------
