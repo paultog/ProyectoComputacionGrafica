@@ -347,10 +347,11 @@ int main()
 	//Model House((char*)"Models/house/house.obj");
 	//Model Windows((char*)"Models/house/windows.obj");
 	Model Snowman((char*)"Models/snowman/snowman.obj");
-	//Model Doors((char*)"Models/house/doors.obj");
+	//Model Doors((char*)"Models/house/doors.obj"); 
 	Model fishTank((char*)"Models/house/fishTank.obj");
 	Model ski((char*)"Models/ski/ski.obj");
-
+	Model Donovan((char*)"Models/restaurant/restaurant.obj");
+	Model DonovanWindows((char*)"Models/restaurant/windowsRes.obj");
 	//Model Ball((char*)"Models/ball.obj");
 	Model bearBody((char*)"Models/bear/bearBody.obj");
 	Model HeadBear((char*)"Models/bear/HeadBear.obj");
@@ -645,6 +646,21 @@ int main()
 		model = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Snowman.Draw(lightingShader);
+
+		//			 ------------------------------ Restaurant --------------------------
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Donovan.Draw(lightingShader);
+
+		//			 ------------------------------ Windows Restaurant --------------------------
+		modelWindows = glm::mat4(1);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
+		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelWindows));
+		DonovanWindows.Draw(lightingShader);
+		glDisable(GL_BLEND);
 
 		//			 ------------------------------ Casas 1 --------------------------
 		model = glm::mat4(1);
