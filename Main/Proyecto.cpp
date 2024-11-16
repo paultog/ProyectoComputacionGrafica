@@ -340,21 +340,24 @@ int main()
 	// -------------------------- CARGA DE MODELOS -------------------------------------------------------------
 	Model mountain((char*)"Models/mountain/mountain.obj");
 	Model Tree1((char*)"Models/trees/tree.obj");
-	//Model Stand((char*)"Models/stand/stand.obj");
-	//Model Sculptures((char*)"Models/sculptures/sculptures.obj");
+	Model Stand((char*)"Models/stand/stand.obj");
+	Model Sculptures((char*)"Models/sculptures/sculptures.obj");
 	Model Base((char*)"Models/sculptures/base.obj");
 	Model Floor((char*)"Models/house/snowFloor.obj");
-	//Model House((char*)"Models/house/house.obj");
-	//Model Windows((char*)"Models/house/windows.obj");
+	Model House((char*)"Models/house/house.obj");
+	Model infraRed((char*)"Models/infrared/infrared.obj");
+	Model Windows((char*)"Models/house/windows.obj");
 	Model Snowman((char*)"Models/snowman/snowman.obj");
-	//Model Doors((char*)"Models/house/doors.obj"); 
-	//Model fishTank((char*)"Models/house/fishTank.obj"); 
+	Model Doors((char*)"Models/house/doors.obj");  
 	Model ski((char*)"Models/ski/ski.obj");
-	//Model SkiLift((char*)"Models/skiLift/skiLift.obj");
+	Model SkiLift((char*)"Models/skiLift/skiLift.obj");
 	Model MotoSki((char*)"Models/motoski/motoski.obj");
-		//Model Donovan((char*)"Models/restaurant/restaurant.obj");
-	//Model DonovanWindows((char*)"Models/restaurant/windowsRes.obj");
-	//Model Ball((char*)"Models/ball.obj");
+	Model Donovan((char*)"Models/restaurant/restaurant.obj");
+	Model DonovanWindows((char*)"Models/restaurant/windowsRes.obj");
+	Model snowboarder1((char*)"Models/snowboarder/sb1.obj");
+	Model snowboarder2((char*)"Models/snowboarder/sb2.obj");
+	 
+
 	Model bearBody((char*)"Models/bear/bearBody.obj");
 	Model HeadBear((char*)"Models/bear/HeadBear.obj");
 	Model F_RightLeg((char*)"Models/bear/F_RightLegBear.obj");
@@ -604,12 +607,7 @@ int main()
 		glm::mat4 modelBody;
 		glm::mat4 modelMoto;
 
-		/*
-		glm::mat4 modelHead;
-		glm::mat4 modelFR;
-		glm::mat4 modelFL;
-		glm::mat4 modelBR;
-		glm::mat4 modelBL;*/
+		
 
 		/*=====================================  Para dibujar los modelos ==================================*/
 		//				------------------------------ Mountain --------------------------
@@ -620,14 +618,11 @@ int main()
 
 		//				------------------------------ Stand --------------------------
 		model = glm::mat4(1);
-		//model = glm::translate(model, glm::vec3(-25.0f, -0.80f, -1.0f));  // Ajuste de posición
-		//model = glm::scale(model, glm::vec3(0.65f, 0.65f, 0.65f));  // Escala reducida
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//Stand.Draw(lightingShader);
+		Stand.Draw(lightingShader);
 
 		//				------------------------------ Bases --------------------------
 		modelBase = glm::mat4(1);
-		//modelBase = glm::translate(modelBase, glm::vec3(-10.0f, -0.80f, 20.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelBase));
 		Base.Draw(lightingShader);
 
@@ -638,7 +633,7 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelSculptures));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
 		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelSculptures));
-		//Sculptures.Draw(lightingShader);
+		Sculptures.Draw(lightingShader);
 		glDisable(GL_BLEND);
 
 		//				------------------------------ Ski --------------------------  
@@ -649,7 +644,22 @@ int main()
 		//				------------------------------ Ski Telesilla --------------------------
 		modelSkiLift = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelSkiLift));
-		//SkiLift.Draw(lightingShader);
+		SkiLift.Draw(lightingShader);
+
+		//				------------------------------ MotoSki --------------------------
+		modelSkiLift = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelSkiLift));
+		MotoSki.Draw(lightingShader);
+
+		//				------------------------------ Snowboarder 1 --------------------------
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		snowboarder1.Draw(lightingShader);
+
+		//				------------------------------ Snowboarder 2 --------------------------
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		snowboarder2.Draw(lightingShader);
 
 		//				------------------------------ MotoSki --------------------------
 		modelSkiLift = glm::mat4(1);
@@ -664,7 +674,7 @@ int main()
 		//			 ------------------------------ Restaurant --------------------------
 		model = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//Donovan.Draw(lightingShader);
+		Donovan.Draw(lightingShader);
 
 		//			 ------------------------------ Windows Restaurant --------------------------
 		modelWindows = glm::mat4(1);
@@ -673,13 +683,18 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
 		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelWindows));
-		//DonovanWindows.Draw(lightingShader);
+		DonovanWindows.Draw(lightingShader);
 		glDisable(GL_BLEND);
 
 		//			 ------------------------------ Casas 1 --------------------------
 		model = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//House.Draw(lightingShader);
+		House.Draw(lightingShader);
+
+		//			 ------------------------------ infrared --------------------------
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		infraRed.Draw(lightingShader);
 
 		//			 ------------------------------ Windows --------------------------
 		modelWindows = glm::mat4(1);
@@ -688,18 +703,16 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
 		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelWindows));
-		//Windows.Draw(lightingShader);
+		Windows.Draw(lightingShader);
 		glDisable(GL_BLEND);
 
 		//			 ------------------------------ Doors --------------------------
 		model = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//Doors.Draw(lightingShader);
+		Doors.Draw(lightingShader);
 
 				//			 ------------------------------ Arbol --------------------------
 		model = glm::mat4(1);
-		//model = glm::translate(model, glm::vec3(-48.0f, -1.0f, 20.0f));  // Asegúrate de que esté dentro de la vista de la cámara
-		//model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 		modelWindows2 = glm::rotate(modelWindows2, glm::radians(35.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Tree1.Draw(lightingShader);
@@ -708,7 +721,7 @@ int main()
 		//			 ------------------------------ Piso --------------------------
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-		//model = glm::scale(model, glm::vec3(1.0f, 0.3f, 1.0f));  // Escala ajustada
+		model = glm::scale(model, glm::vec3(1.0f, 0.3f, 1.0f));  // Escala ajustada
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Floor.Draw(lightingShader);
 
@@ -759,18 +772,6 @@ int main()
 		modelBR = glm::rotate(modelBR, glm::radians(RLegsAux), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelBR));
 		B_RightLeg.Draw(lightingShader);
-
-
-		//model = glm::mat4(1);
-		//glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
-		//model = glm::rotate(model, glm::radians(rotBall), glm::vec3(0.0f, 1.0f, 0.0f));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//Ball.Draw(lightingShader);
-		//glDisable(GL_BLEND);  //Desactiva el canal alfa 
-		//glBindVertexArray(0);
 
 
 		// Also draw the lamp object, again binding the appropriate shader
